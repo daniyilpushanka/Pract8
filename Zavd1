@@ -1,0 +1,49 @@
+import pandas as pd
+
+try:
+    df = pd.read_csv("inflation.csv")
+    print("Файл успішно завантажено")
+except FileNotFoundError:
+    print("Файл не знайдено")
+    exit()
+
+print("\nПочаткові дані:")
+print(df)
+
+print("\nПерші 3 рядки:")
+print(df.head(3))
+
+print("\nТипи даних:")
+print(df.dtypes)
+
+print("\nРозмір таблиці:")
+print(df.shape)
+
+print("\nСтатистика:")
+print(df.describe())
+
+df["Index"] = df["Inflation (%)"] / 100
+
+print("\nДані з новим стовпцем:")
+print(df)
+
+a = df[df["Inflation (%)"] > 20]
+
+print("\nІнфляція більше 20%:")
+print(a)
+
+b = df.sort_values("Inflation (%)", ascending=False)
+
+print("\nСортування:")
+print(b)
+
+c = df.groupby("Country")["Inflation (%)"].agg(["mean", "min", "max"])
+
+print("\nГрупування:")
+print(c)
+
+print("\nКількість унікальних років:")
+print(df["Year"].nunique())
+
+b.to_csv("analys.csv", index=False)
+print("\nРезультати збережено у файл analys.csv")
