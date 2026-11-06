@@ -1,0 +1,42 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("2014.csv")
+df["Month"] = pd.to_datetime(df["Date"]).dt.month
+
+print("\nПерші 5 рядків:")
+print(df.head())
+df.info()
+print(df.describe())
+
+# Загальна кількість велосипедистів
+print("\nВсього велосипедистів:",
+      int(df.drop(columns=["Date", "Month"]).sum().sum()))
+
+# Велодоріжки
+dor = ["Berri1", "Maisonneuve_1", "Parc", "Boyer", "University"]
+
+month = df.groupby("Month")[dor].sum()
+
+# Місяці
+months = ["Січень", "Лютий", "Березень", "Квітень",
+          "Травень", "Червень", "Липень", "Серпень",
+          "Вересень", "Жовтень", "Листопад", "Грудень"]
+
+# Найпопулярніші місяці
+print("\nНайпопулярніші місяці:")
+for x in dor:
+    print(x, "- місяць", months[month[x].idxmax() - 1])
+
+# Кількість велосипедистів за місяцями
+print("\nКількість велосипедистів за місяцями:")
+print(month)
+
+# Графік
+month.plot(marker="o")
+plt.title("Використання велодоріжок за 2014 рік")
+plt.xlabel("Місяць")
+plt.ylabel("Кількість велосипедистів")
+plt.xticks(range(1, 13))
+plt.grid()
+plt.show()
